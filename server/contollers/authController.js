@@ -1,22 +1,6 @@
-import jwt from 'jsonwebtoken';
 import User from '../models/users.js';
-import { 
-    JWT_SECRET, JWT_EXPIRES_IN  
-} from '../utils/config.js';
 
-// utility function ro generate jwt token.
-const generateToken = (user)=>{
-    return jwt.sign({
-        id: user._id,
-        email: user.email,
-        role: user.role,
-    },
-    JWT_SECRET,
-    {expiresIn: process.env.JWT_EXPIRES_IN || '1d'}
-    );
-};
-
-
+import { generateToken } from '../utils/generateToken.js';
 
 export const authController = {
     /**
@@ -118,106 +102,106 @@ export const authController = {
         };
     },
 
-    getUser: async (req, res, next)=>{
-        try{
-           const userId = req.params.userId || 
-           req.user.id;
-           const user = await User.findById(userId);
+    // getUser: async (req, res, next)=>{
+    //     try{
+    //        const userId = req.params.userId || 
+    //        req.user.id;
+    //        const user = await User.findById(userId);
 
-            if(!user){
-                return res.status(404).json({
-                     error: 'User not found.' 
-                });
-            }
+    //         if(!user){
+    //             return res.status(404).json({
+    //                  error: 'User not found.' 
+    //             });
+    //         }
 
-            res.json({
-                user: {
-                  id: user._id,
-                  name: user.name,
-                  email: user.email,
-                  role: user.role,
-                  createdAt: user.createdAt,
-                  updatedAt: user.updatedAt,
-                },
-            });
-        } catch(error){
-            next(error)
-        }
-    },
+    //         res.json({
+    //             user: {
+    //               id: user._id,
+    //               name: user.name,
+    //               email: user.email,
+    //               role: user.role,
+    //               createdAt: user.createdAt,
+    //               updatedAt: user.updatedAt,
+    //             },
+    //         });
+    //     } catch(error){
+    //         next(error)
+    //     }
+    // },
 
-    updateUser: async (req, res, next)=>{
-        /**
-         * @desc   Update user profile details
-         * @route  PUT /api/users/me or /api/users/:userId
-         * @access Private
-        */
+    // updateUser: async (req, res, next)=>{
+    //     /**
+    //      * @desc   Update user profile details
+    //      * @route  PUT /api/users/me or /api/users/:userId
+    //      * @access Private
+    //     */
 
-        try{
-            const userId = req.params.userId || 
-            req.user.id;
-            const user = await User.findById(userId);
+    //     try{
+    //         const userId = req.params.userId || 
+    //         req.user.id;
+    //         const user = await User.findById(userId);
 
-            if(!user){
-                return res.status(404).json({
-                        error: 'User not found.' 
-                });
-            }
+    //         if(!user){
+    //             return res.status(404).json({
+    //                     error: 'User not found.' 
+    //             });
+    //         }
 
-            const allowedUpdate = [
-                "name", "email", "password"
-            ];
-            allowedUpdate.forEach((field)=>{
-                if(req.body[field] !== undefined){
-                    user[field] = req.body[field];
-                }
-            });
+    //         const allowedUpdate = [
+    //             "name", "email", "password"
+    //         ];
+    //         allowedUpdate.forEach((field)=>{
+    //             if(req.body[field] !== undefined){
+    //                 user[field] = req.body[field];
+    //             }
+    //         });
 
-            await user.save();
+    //         await user.save();
 
-            res.json({
-                message: 'User updated successfully',
-                user: {
-                  id: user._id,
-                  name: user.name,
-                  email: user.email,
-                  role: user.role,
-                  createdAt: user.createdAt,
-                  updatedAt: user.updatedAt,
-                },
-            });
-        } catch(error){
-            next(error)
-        }
-    },
+    //         res.json({
+    //             message: 'User updated successfully',
+    //             user: {
+    //               id: user._id,
+    //               name: user.name,
+    //               email: user.email,
+    //               role: user.role,
+    //               createdAt: user.createdAt,
+    //               updatedAt: user.updatedAt,
+    //             },
+    //         });
+    //     } catch(error){
+    //         next(error)
+    //     }
+    // },
 
-    getAllUsers: async (req, res, next)=>{
-        /**
-         * @desc   Get a list of all users (admin only)
-         * @route  GET /api/users
-         * @access Private (Admin only)
-        */
+    // getAllUsers: async (req, res, next)=>{
+    //     /**
+    //      * @desc   Get a list of all users (admin only)
+    //      * @route  GET /api/users
+    //      * @access Private (Admin only)
+    //     */
 
-        try{
-            if(req.user.role !== 'admin'){
-                return res.status(403).json(
-                    { error: 'Access denied.' }
-                );
-            }
+    //     try{
+    //         if(req.user.role !== 'admin'){
+    //             return res.status(403).json(
+    //                 { error: 'Access denied.' }
+    //             );
+    //         }
 
-            const users = await User.find()
+    //         const users = await User.find()
 
-            res.json({
-                users: users.map((user)=>({
-                    id: user._id,
-                    name: user.name,
-                    email: user.email,
-                    role: user.role,
-                    createdAt: user.createdAt,
-                    updatedAt: user.updatedAt,
-                }))
-            })
-        } catch(error){
-            next(error)
-        }
-    }
+    //         res.json({
+    //             users: users.map((user)=>({
+    //                 id: user._id,
+    //                 name: user.name,
+    //                 email: user.email,
+    //                 role: user.role,
+    //                 createdAt: user.createdAt,
+    //                 updatedAt: user.updatedAt,
+    //             }))
+    //         })
+    //     } catch(error){
+    //         next(error)
+    //     }
+    // }
 };
