@@ -10,9 +10,11 @@ const app = express();
 
 app.use(express.json());
 
+// open route
 app.use(`/api/v1/auth`, authRouter);
-
+// protected route
 app.use(`/api/v1/users`, userRouter);
+
 app.use(errorHandler);
 
 export default app;
