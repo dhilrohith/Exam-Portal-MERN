@@ -6,6 +6,9 @@ import { authorize, protect } from
 import { questionBankController } from 
 '../contollers/questionBankController.js';
 
+import { questionController } 
+from '../contollers/questionControllers.js';
+
 export const questionBankRouter = express.Router();
 
 questionBankRouter.get(`/`,
@@ -14,6 +17,13 @@ questionBankRouter.get(`/`,
 questionBankRouter.get(`/:bankId`,
     questionBankController.getQuestionBankById
 );
+
+// question routes
+questionBankRouter.post(`/:bankId/questions`,
+    questionController.createQuestion
+);
+questionBankRouter.put(`/:questionId/questions`)
+questionBankRouter.delete(`/:questionId/questions`);
 
 // protected routes
 questionBankRouter.post(`/`,
