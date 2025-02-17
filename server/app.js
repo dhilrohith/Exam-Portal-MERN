@@ -8,8 +8,6 @@ import {userRouter} from './routes/userRoutes.js';
 
 import {questionBankRouter} from './routes/questionBankRoutes.js';
 
-import { questionRouter } from './routes/questionRoutes.js';
-
 const app = express();
 
 app.use(express.json());
@@ -22,11 +20,6 @@ app.use(`/api/v1/users`, userRouter);
 
 // questionBank route
 app.use(`/api/v1/questionBanks`, questionBankRouter);
-// question route
-app.use(
-    `/api/questionBanks/:bankId/questions`,
-    questionRouter
-);
 
 // error handler route
 app.use(errorHandler);
