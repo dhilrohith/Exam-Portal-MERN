@@ -1,4 +1,4 @@
-import QuestionBank from '../models/quetionBank.js';
+import QuestionBank from '../models/questionBank.js';
 
 export const questionBankController = {
     createQuestionBank: async (req, res, next)=>{
