@@ -4,14 +4,14 @@ const {Schema} = mongoose;
 
 const QuestionSchema = new Schema({
     type: {
-        type: Stringify,
+        type: String,
         enum: ['multiple-choice', 'true-fals'],
         required: 
         [true, 'please specify the question type'],
     },
 
     questionText: {
-        type: Stringify,
+        type: String,
         required: [true, 'question text is required'],
     },
 
