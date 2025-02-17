@@ -18,12 +18,20 @@ questionBankRouter.get(`/:bankId`,
     questionBankController.getQuestionBankById
 );
 
-// question routes
+// question routes protected
 questionBankRouter.post(`/:bankId/questions`,
+    protect, authorize("admin"), 
     questionController.createQuestion
 );
-questionBankRouter.put(`/:questionId/questions`)
-questionBankRouter.delete(`/:questionId/questions`);
+questionBankRouter.put(`/:bankId/questions/:questionId`,
+    protect, authorize("admin"),
+    questionController.updateQuestionInBank
+)
+questionBankRouter.delete(
+    `/:bankId/questions/:questionId`,
+    protect, authorize("admin"),
+    questionController.deleteQuestionInBank
+);
 
 // protected routes
 questionBankRouter.post(`/`,
