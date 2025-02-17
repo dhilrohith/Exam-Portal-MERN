@@ -8,15 +8,17 @@ import { questionBankController } from
 
 export const questionBankRouter = express.Router();
 
-questionBankRouter.post(`/`,
-    protect, authorize('admin'),
-    questionBankController.createQuestionBank
-);
 questionBankRouter.get(`/`,
     questionBankController.getAllQuestionBanks
 );
 questionBankRouter.get(`/:bankId`,
     questionBankController.getQuestionBankById
+);
+
+// protected routes
+questionBankRouter.post(`/`,
+    protect, authorize('admin'),
+    questionBankController.createQuestionBank
 );
 questionBankRouter.put(`/:bankId`,
     protect, authorize('admin'),
