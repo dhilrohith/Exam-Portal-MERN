@@ -11,9 +11,12 @@ export const protect = (req, res, next) => {
       req.headers.authorization.startsWith('Bearer')
     ) {
       try {
-        token = req.headers.authorization.split(' ')[1];
+        token = req.headers.authorization
+        .split(' ')[1];
         // Verify token and attach the decoded payload to req.user
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(
+          token, process.env.JWT_SECRET
+        );
         req.user = decoded;
         return next();
       } catch (error) {
