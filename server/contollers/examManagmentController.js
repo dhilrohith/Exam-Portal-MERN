@@ -208,4 +208,32 @@ export const examManagementController = {
             next(error);
         }
     },
+
+    getExamResults: async (req, res, next)=>{
+        try{
+            const { examId } = req.params;
+            const { attemptId } = req.query;
+        
+            // Find the exam attempt record associated with this exam and student
+            const attempt = await ExamAttempt.findOne({
+              _id: attemptId,
+              exam: examId,
+              student: req.user.id,
+            });
+            if (!attempt) {
+              return res.status(404).json({ error: 'Exam attempt not found' });
+            }
+        
+            res.json({
+              attempt: {
+                score: attempt.score,
+                totalQuestions: attempt.totalQuestions,
+                results: attempt.results,
+                submittedAt: attempt.updatedAt,
+              },
+            });
+        } catch(error){
+            next(error)
+        }
+    }
 }

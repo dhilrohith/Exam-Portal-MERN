@@ -46,3 +46,7 @@ examRouter.post(`/:examId/submit`,
     protect,
     examManagementController.submitExam
 )
+examRouter.get(`/:examId/results`,
+    protect,
+    examManagementController.getExamResults
+)
