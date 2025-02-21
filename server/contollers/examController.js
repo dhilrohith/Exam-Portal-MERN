@@ -99,5 +99,59 @@ export const examController= {
         } catch(error){
             next(error)
         }
+    },
+
+    deleteExam: async (req, res, next)=>{
+        try{
+            const {examId} = req.params;
+
+            const exam = await Exam.findById(examId);
+            if(!exam){
+                return res.status(404).json({
+                    error: "Exam not found"
+                })
+            }
+
+            await exam.deleteOne();
+
+            res.json({
+                message: 'Exam deleted successfully',
+                exam,
+              });   
+        } catch(error){
+            next(error);
+        }
+    },
+
+    enrollStudent: async (req, res, next)=>{
+        try{
+            const {examId} = req.params;
+            const userId = req.user.id;
+
+            const exam  = await Exam.findById(examId);
+            if(!exam){
+                return res.status(404).json({
+                    error: "Exam not found"
+                })
+            }
+
+            if(exam.enrolledStudents.includes(userId))
+            {
+                return res.status(400).json({
+                    error: 
+                    `User already enrolled in this exam`
+                });
+            }
+
+            exam.enrolledStudents.push(userId);
+            await exam.save();
+
+            res.json({
+                message: `Enrollment successfull`,
+                exam,
+            })
+        } catch(error){
+            next(error)
+        }
     }
 }
