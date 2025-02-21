@@ -6,6 +6,9 @@ import { examController } from
 import {protect, authorize} from 
 '../middlewares/authMiddleware.js'
 
+import { examManagementController } from 
+'../contollers/examManagmentController.js';
+
 export const examRouter = express.Router();
 
 examRouter.post(`/`,
@@ -27,4 +30,11 @@ examRouter.post(`/:examId/enroll`,
     protect,
     authorize('student'),
     examController.enrollStudent
+)
+
+// exam taking & automated grading
+
+examRouter.get(`/:examId/start`,
+    protect,
+    examManagementController.startExam
 )
