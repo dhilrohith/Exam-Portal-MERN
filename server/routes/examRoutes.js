@@ -42,3 +42,7 @@ examRouter.post(`/:examId/save`,
     protect,
     examManagementController.saveExamProgress
 )
+examRouter.post(`/:examId/submit`,
+    protect,
+    examManagementController.submitExam
+)

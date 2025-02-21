@@ -106,5 +106,106 @@ export const examManagementController = {
         } catch(error){
             next(error);
         }
-    }
+    },
+
+    submitExam: async (req, res, next)=>{
+        try{
+            const { examId } = req.params;
+            const { attemptId, answers } = req.body;
+        
+            // Find the exam by ID
+            const exam = await Exam.findById(examId);
+            if (!exam) {
+              return res.status(404)
+              .json({ error: 'Exam not found' });
+            }
+            
+            // Find the associated question bank
+            const questionBank = await QuestionBank
+            .findById(exam.questionBankId);
+
+            if (!questionBank) {
+              return res.status(404)
+              .json({ 
+                error: 'Question bank not found' 
+                });
+            }
+        
+            // Find the exam attempt record for the current student
+            const attempt = await ExamAttempt
+            .findOne({
+              _id: attemptId,
+              exam: examId,
+              student: req.user.id,
+            });
+            
+            if (!attempt) {
+              return res.status(404)
+              .json({ 
+                error: 'Exam attempt not found' 
+                });
+            }
+        
+            // Since "answers" is defined as a Map in the model, update it using Map.set()
+            // Loop over each key-value pair in the incoming answers object.
+            for (const [questionId, answerValue] of 
+                Object.entries(answers)) {
+              attempt.answers.set(
+                questionId, answerValue
+                );
+            }
+        
+            // Mark the attempt as submitted.
+            attempt.status = 'submitted';
+        
+            let score = 0;
+            const totalQuestions = questionBank
+            .questions.length;
+
+            const results = [];
+        
+            // Evaluate each question in the question bank
+            questionBank.questions.forEach(
+                (question) => {
+              // Retrieve the student's answer from the Map using the question's _id
+              const studentAnswer = attempt.answers
+              .get(question._id.toString());
+              // Determine if the answer is correct; if no answer provided, default to false.
+              const isCorrect = studentAnswer 
+                ? studentAnswer.toString() === 
+                question.correctAnswer.toString() 
+                : false;
+        
+              // Increment score if correct
+              if (isCorrect) {
+                score++;
+              }
+        
+              // Build the detailed result for the question ensuring isCorrect is a boolean
+              results.push({
+                questionId: question._id,
+                questionText: question.questionText,
+                studentAnswer: studentAnswer || null,
+                correctAnswer: question.correctAnswer,
+                isCorrect: isCorrect, // Always defined as true or false
+                explanation: question.explanation || '',
+              });
+            });
+        
+            // Update attempt record with grading results
+            attempt.score = score;
+            attempt.totalQuestions = totalQuestions;
+            attempt.results = results;
+            await attempt.save();
+        
+            res.json({
+              message: 'Exam submitted and graded successfully',
+              score,
+              totalQuestions,
+              results,
+            });
+        } catch(error){
+            next(error);
+        }
+    },
 }
