@@ -64,5 +64,47 @@ export const examManagementController = {
         } catch(error){
             next(error);
         }
+    },
+
+    saveExamProgress: async (req, res, next)=>{
+        try{
+            const { examId } = req.params;
+            const { 
+                attemptId, answers, currentQuestion 
+            } = req.body;
+
+            // Locate the exam attempt record for the current student
+            const attempt = await ExamAttempt.findOne({
+                _id: attemptId,
+                exam: examId,
+                student: req.user.id,
+            });
+
+            if (!attempt) {
+                return res.status(404)
+                .json({ 
+                    error: 'Exam attempt not found' 
+                });
+            }
+
+            // Update the answers Map properly by iterating over the new answers
+            for (const [questionId, answer] of 
+                Object.entries(answers)
+            ) {
+                attempt.answers.set(questionId, answer);
+            }
+            
+            // Optionally track the current question to resume later
+            attempt.currentQuestion = currentQuestion;
+            await attempt.save();
+
+            res.json({
+                message: 'Progress saved successfully',
+                attempt,
+            });
+              
+        } catch(error){
+            next(error);
+        }
     }
 }

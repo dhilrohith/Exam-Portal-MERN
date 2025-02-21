@@ -38,3 +38,7 @@ examRouter.get(`/:examId/start`,
     protect,
     examManagementController.startExam
 )
+examRouter.post(`/:examId/save`,
+    protect,
+    examManagementController.saveExamProgress
+)
