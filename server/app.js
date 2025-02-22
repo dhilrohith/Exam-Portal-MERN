@@ -12,6 +12,8 @@ import {questionBankRouter} from
 
 import { examRouter } from './routes/examRoutes.js';
 
+import { proctorRouter } from './routes/proctorRoutes.js';
+
 const app = express();
 
 app.use(express.json());
@@ -27,6 +29,9 @@ app.use(`/api/v1/questionBanks`, questionBankRouter);
 
 // exam management and sheduling
 app.use('/api/v1/exams', examRouter);
+
+// proctor routes
+app.use(`/api/v1/proctoring`, proctorRouter);
 
 // error handler route
 app.use(errorHandler);
