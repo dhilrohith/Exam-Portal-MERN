@@ -12,7 +12,13 @@ import {questionBankRouter} from
 
 import { examRouter } from './routes/examRoutes.js';
 
-import { proctorRouter } from './routes/proctorRoutes.js';
+import { proctorRouter } from 
+'./routes/proctorRoutes.js';
+
+import { reportRouter } from './routes/reportRoutes.js';
+
+import {dashboardRouter} from 
+'./routes/dashboardRoute.js'
 
 const app = express();
 
@@ -32,6 +38,12 @@ app.use('/api/v1/exams', examRouter);
 
 // proctor routes
 app.use(`/api/v1/proctoring`, proctorRouter);
+
+// report routes
+app.use(`/api/v1/reports`, reportRouter)
+
+// dashboard route
+app.use('/api/v1/dashboard', dashboardRouter);
 
 // error handler route
 app.use(errorHandler);
