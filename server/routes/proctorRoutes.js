@@ -25,5 +25,6 @@ proctorRouter.get(`/session/:sessionId`,
 );
 proctorRouter.get(`/sessions`,
     protect,
+    authorize("admin"),
     proctorController.listProctoringSession
 );

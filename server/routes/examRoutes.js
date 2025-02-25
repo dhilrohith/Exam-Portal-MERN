@@ -12,18 +12,25 @@ import { examManagementController } from
 export const examRouter = express.Router();
 
 examRouter.post(`/`,
+    protect,
+    authorize("admin"),
     examController.createExam
 )
 examRouter.get(`/`,
+    protect,
     examController.getAllExams
 )
 examRouter.get('/:examId',
     examController.getExamById
 )
-examRouter.put(`/:examId`, 
+examRouter.put(`/:examId`,
+    protect,
+    authorize("admin"), 
     examController.updateExam
 )
 examRouter.delete(`/:examId`,
+    protect,
+    authorize("admin"),
     examController.deleteExam
 )
 examRouter.post(`/:examId/enroll`,
