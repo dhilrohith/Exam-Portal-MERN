@@ -8,18 +8,18 @@ import {proctorController} from
 
 export const proctorRouter = express.Router();
 
-proctorRouter.post(`/session/start`, 
+proctorRouter.post(`/start`, 
     protect,
     proctorController.startProctoringSession
 );
-proctorRouter.post(`/session/:sessionId/event`,
+proctorRouter.post(`/:sessionId/event`,
     proctorController.logProctoringEvent
 );
 proctorRouter.post(`/verify`,
     protect,
     proctorController.verifyIdentity
 );
-proctorRouter.get(`/session/:sessionId`,
+proctorRouter.get(`/:sessionId`,
     protect,
     proctorController.getProctoringSessionDetails
 );
