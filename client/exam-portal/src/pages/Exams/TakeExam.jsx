@@ -15,7 +15,12 @@ function TakeExam() {
   const [answers, setAnswers] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  // For proctor warnings
   const [showWarning, setShowWarning] = useState(false);
+
+  // --- NEW: Timer State ---
+  const [timeRemaining, setTimeRemaining] = useState(null);
 
   // Start exam and proctoring session
   useEffect(() => {
@@ -41,14 +46,74 @@ function TakeExam() {
     startExamAndProctor();
   }, [examId]);
 
-  // Setup event listener to detect tab switching/visibility change
+  // Once exam data is loaded, compute how long until the exam ends
+  useEffect(() => {
+    if (!examData || !examData.schedule) return;
+
+    const startTimeMs = new Date(examData.schedule.startDateTime).getTime();
+    const durationMs = examData.schedule.durationMinutes * 60 * 1000;
+    const endTimeMs = startTimeMs + durationMs;
+    const nowMs = Date.now();
+
+    const initialRemaining = endTimeMs - nowMs;
+    // If the exam is already past its end time, auto-submit
+    if (initialRemaining <= 0) {
+      handleSubmit();
+    } else {
+      setTimeRemaining(initialRemaining);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [examData]);
+
+  // Timer: Decrement timeRemaining every second; auto-submit at 0
+  useEffect(() => {
+    if (timeRemaining === null) return; // not yet computed
+    if (timeRemaining <= 0) {
+      // If time is up, auto-submit
+      handleSubmit();
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setTimeRemaining((prev) => {
+        if (prev <= 1000) {
+          clearInterval(timer);
+          handleSubmit();
+          return 0;
+        }
+        return prev - 1000;
+      });
+    }, 1000);
+
+    // Cleanup
+    return () => clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timeRemaining]);
+
+  // Helper to format the remaining time as MM:SS
+  const formatTime = (ms) => {
+    const totalSeconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+  };
+
+  // Proctor event logging
+  const logEvent = async (eventType, details) => {
+    try {
+      await api.post(`/proctoring/${proctorSessionId}/event`, { eventType, details });
+    } catch (err) {
+      console.error('Error logging proctoring event:', err.response?.data);
+    }
+  };
+
+  // Warn if user switches tabs
   useEffect(() => {
     if (!proctorSessionId) return;
 
     const handleVisibilityChange = () => {
       if (document.hidden) {
         setShowWarning(true);
-        // Log the violation event to your backend
         logEvent('browserSwitch', 'User switched browser tab');
       }
     };
@@ -59,34 +124,7 @@ function TakeExam() {
     };
   }, [proctorSessionId]);
 
-  // Optional: Also detect window blur (user clicks away from the window)
-  // useEffect(() => {
-  //   if (!proctorSessionId) return;
-
-  //   const handleBlur = () => {
-  //     setShowWarning(true);
-  //     logEvent('windowBlur', 'Browser window lost focus');
-  //   };
-
-  //   window.addEventListener('blur', handleBlur);
-  //   return () => {
-  //     window.removeEventListener('blur', handleBlur);
-  //   };
-  // }, [proctorSessionId]);
-
-  const logEvent = async (eventType, details) => {
-    try {
-      await api.post(`/proctoring/${proctorSessionId}/event`, { eventType, details });
-      console.log(`Logged event: ${eventType}`);
-    } catch (err) {
-      console.error('Error logging proctoring event:', err.response?.data);
-    }
-  };
-
-  const handleAnswerChange = (questionId, answer) => {
-    setAnswers({ ...answers, [questionId]: answer });
-  };
-
+  // Exam submission
   const handleSubmit = async () => {
     try {
       await api.post(`/exams/${examId}/submit`, { attemptId, answers });
@@ -96,6 +134,10 @@ function TakeExam() {
       console.error('Submission error:', err.response?.data);
       setError(err.response?.data?.error || 'Submission failed');
     }
+  };
+
+  const handleAnswerChange = (questionId, answer) => {
+    setAnswers({ ...answers, [questionId]: answer });
   };
 
   if (loading) return <Spinner />;
@@ -115,6 +157,14 @@ function TakeExam() {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-xl font-bold mb-4">{examData.title}</h1>
+
+      {/* Display the Timer */}
+      {timeRemaining !== null && (
+        <p className="text-red-600 font-bold mb-2">
+          Time Remaining: {formatTime(timeRemaining)}
+        </p>
+      )}
+
       <div className="mb-4">
         <p>
           <strong>Question {currentQuestionIndex + 1}:</strong>{' '}
@@ -172,7 +222,8 @@ function TakeExam() {
           <div className="bg-white p-6 rounded shadow-md max-w-sm w-full">
             <h2 className="text-red-600 font-bold text-xl mb-2">Warning!</h2>
             <p className="mb-4 text-black font-bold">
-              You have switched tabs or lost focus on the exam window. Please return immediately. Multiple violations may result in exam termination.
+              You have switched tabs or lost focus on the exam window. Please return immediately. 
+              Multiple violations may result in exam termination.
             </p>
             <button
               onClick={() => setShowWarning(false)}
