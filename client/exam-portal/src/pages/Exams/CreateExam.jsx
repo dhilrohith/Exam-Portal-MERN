@@ -243,8 +243,14 @@ const CreateExam = () => {
                   onChange={(e) => handleQuestionChange(index, 'type', e.target.value)}
                   className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 >
-                  <option value="multiple-choice">Multiple Choice</option>
-                  <option value="true-fals">True/False</option>
+                  <option value="multiple-choice"
+                  className='text-black'>
+                    Multiple Choice
+                  </option>
+                  <option value="true-fals"
+                  className='text-black'>
+                    True/False
+                  </option>
                 </select>
               </div>
               {q.type === 'multiple-choice' && (
@@ -288,9 +294,18 @@ const CreateExam = () => {
                   onChange={(e) => handleQuestionChange(index, 'difficulty', e.target.value)}
                   className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 >
-                  <option value="Easy">Easy</option>
-                  <option value="Medium">Medium</option>
-                  <option value="Hard">Hard</option>
+                  <option value="Easy"
+                  className='text-black'>
+                    Easy
+                  </option>
+                  <option value="Medium"
+                  className='text-black'>
+                    Medium
+                  </option>
+                  <option value="Hard"
+                  className='text-black'>
+                    Hard
+                  </option>
                 </select>
               </div>
               <div className="mb-2">

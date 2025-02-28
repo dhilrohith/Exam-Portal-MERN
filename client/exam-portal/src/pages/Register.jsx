@@ -22,7 +22,7 @@ function Register() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen ">
+    <div className="flex justify-center items-center ">
       <form onSubmit={handleSubmit} className="bg-amber-800 p-8 rounded shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-4">Register</h2>
         {error && <p className="text-red-500">{error}</p>}

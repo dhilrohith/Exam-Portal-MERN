@@ -21,79 +21,83 @@ import EditExam from './pages/Exams/EditExam.jsx';
 function App() {
   return (
     <Router>
-      <Navbar />
-      <div className="min-h-screen container mx-auto p-4">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={
-              <Dashboard />
-          } />
+      <div className="flex flex-col min-h-screen bg-black text-white">
+        <Navbar />
 
-          <Route path="/exams" element={
-            <PrivateRoute>
-              <ExamList />
-            </PrivateRoute>
-          } />
+        <main className="flex-1 flex items-center justify-center">
+          <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/dashboard" element={
+                  <Dashboard />
+              } />
 
-          <Route path="/exams/:examId" element={
-            <PrivateRoute>
-              <ExamDetail />
-            </PrivateRoute>
-          } />
+              <Route path="/exams" element={
+                <PrivateRoute>
+                  <ExamList />
+                </PrivateRoute>
+              } />
 
-          <Route path="/exams/:examId/take" element={
-            <PrivateRoute>
-              <TakeExam />
-            </PrivateRoute>
-          } />
+              <Route path="/exams/:examId" element={
+                <PrivateRoute>
+                  <ExamDetail />
+                </PrivateRoute>
+              } />
 
-          <Route path="/exams/:examId/results" element={
-            <PrivateRoute>
-              <ExamResults />
-            </PrivateRoute>
-          } />
+              <Route path="/exams/:examId/take" element={
+                <PrivateRoute>
+                  <TakeExam />
+                </PrivateRoute>
+              } />
 
-          <Route path="/proctoring" element={
-            <PrivateRoute>
-              <ProctorSession />
-            </PrivateRoute>
-          } />
+              <Route path="/exams/:examId/results" element={
+                <PrivateRoute>
+                  <ExamResults />
+                </PrivateRoute>
+              } />
 
-          <Route path="/reports/exams" element={
-            <PrivateRoute>
-              <ExamReports />
-            </PrivateRoute>
-          } />
+              <Route path="/proctoring" element={
+                <PrivateRoute>
+                  <ProctorSession />
+                </PrivateRoute>
+              } />
 
-          <Route path="/reports/users" element={
-            <PrivateRoute>
-              <UserReports />
-            </PrivateRoute>
-          } />
+              <Route path="/reports/exams" element={
+                <PrivateRoute>
+                  <ExamReports />
+                </PrivateRoute>
+              } />
 
-          <Route path="/profile" element={
-            <PrivateRoute>
-              <Profile />
-            </PrivateRoute>
-          } />
+              <Route path="/reports/users" element={
+                <PrivateRoute>
+                  <UserReports />
+                </PrivateRoute>
+              } />
 
-          <Route path="/createexam" element={
-            <PrivateRoute>
-              <CreateExam />
-            </PrivateRoute>
-          } />
+              <Route path="/profile" element={
+                <PrivateRoute>
+                  <Profile />
+                </PrivateRoute>
+              } />
 
-          <Route path="/exams/:examId/edit" element={
-              <PrivateRoute>
-                <EditExam />
-              </PrivateRoute>
-            } />
+              <Route path="/createexam" element={
+                <PrivateRoute>
+                  <CreateExam />
+                </PrivateRoute>
+              } />
 
-        </Routes>
+              <Route path="/exams/:examId/edit" element={
+                  <PrivateRoute>
+                    <EditExam />
+                  </PrivateRoute>
+                } />
+
+          </Routes>
+        </main>
+
+        <Footer />
       </div>
-      <Footer />
     </Router>
   );
 }
