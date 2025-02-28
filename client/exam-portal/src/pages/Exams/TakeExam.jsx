@@ -60,19 +60,19 @@ function TakeExam() {
   }, [proctorSessionId]);
 
   // Optional: Also detect window blur (user clicks away from the window)
-  useEffect(() => {
-    if (!proctorSessionId) return;
+  // useEffect(() => {
+  //   if (!proctorSessionId) return;
 
-    const handleBlur = () => {
-      setShowWarning(true);
-      logEvent('windowBlur', 'Browser window lost focus');
-    };
+  //   const handleBlur = () => {
+  //     setShowWarning(true);
+  //     logEvent('windowBlur', 'Browser window lost focus');
+  //   };
 
-    window.addEventListener('blur', handleBlur);
-    return () => {
-      window.removeEventListener('blur', handleBlur);
-    };
-  }, [proctorSessionId]);
+  //   window.addEventListener('blur', handleBlur);
+  //   return () => {
+  //     window.removeEventListener('blur', handleBlur);
+  //   };
+  // }, [proctorSessionId]);
 
   const logEvent = async (eventType, details) => {
     try {

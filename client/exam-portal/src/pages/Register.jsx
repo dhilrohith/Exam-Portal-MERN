@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import api from '../services/api';
 import { useNavigate } from 'react-router-dom';
+import useAuth from '../hooks/useAuth'
 
 function Register() {
   const [name, setName] = useState('');
@@ -10,11 +11,13 @@ function Register() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  const { login } = useAuth();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const { data } = await api.post('/auth/register', { name, email, password, role });
-      localStorage.setItem('token', data.token);
+      login(data.token);
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.error || 'Registration failed');
