@@ -26,7 +26,7 @@ const app = express();
 
 // Use CORS middleware
 app.use(cors({
-    origin: 'http://localhost:5173', // adjust this to your frontend's URL
+    origin: 'https://exam-portal-mern-web.netlify.app/', // adjust this to your frontend's URL
   }));
 
 app.use(express.json());
