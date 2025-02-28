@@ -51,7 +51,7 @@ function ExamDetail() {
           <p className="mb-4">{exam.description}</p>
           <p><strong>Scheduled:</strong> {new Date(exam.schedule.startDateTime).toLocaleString()}</p>
           <p><strong>Duration:</strong> {exam.schedule.durationMinutes} minutes</p>
-          <div className="mt-4">
+          <div className="mt-4 flex space-x-4">
             <Link to={`/exams/${exam._id}/take`} 
             className="bg-green-500 !text-white px-4 py-2 rounded">
             Take Exam
