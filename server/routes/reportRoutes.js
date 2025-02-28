@@ -23,3 +23,5 @@ reportRouter.get(`/users/:userId`,
     authorize("admin"),
     reportController. getUserPerformanceAnalytics
 )
+reportRouter.get('/users', protect, authorize('admin'), 
+reportController.getAllUsersPerformanceAnalytics);

@@ -10,6 +10,5 @@ export const dashboardRouter = express.Router();
 
 dashboardRouter.get(`/`,
     protect,
-    authorize("admin"),
     reportController.getDashboardSummary
 )

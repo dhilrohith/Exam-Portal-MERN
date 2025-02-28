@@ -4,7 +4,8 @@ export const questionBankController = {
     createQuestionBank: async (req, res, next)=>{
         try{
             const {
-                title, description, category, examType
+                title, description, category, examType,
+                questions
             } = req.body;
 
             const questionBank = new QuestionBank({
@@ -12,6 +13,7 @@ export const questionBankController = {
                 description,
                 category,
                 examType,
+                questions: questions || [],
             });
             await questionBank.save();
 

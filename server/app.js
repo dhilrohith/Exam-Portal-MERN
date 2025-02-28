@@ -1,5 +1,7 @@
 import express from 'express';
 
+import cors from 'cors';
+
 import { authRouter} from './routes/authRoutes.js';
 
 import {errorHandler} from 
@@ -21,6 +23,11 @@ import {dashboardRouter} from
 './routes/dashboardRoute.js'
 
 const app = express();
+
+// Use CORS middleware
+app.use(cors({
+    origin: 'http://localhost:5173', // adjust this to your frontend's URL
+  }));
 
 app.use(express.json());
 
