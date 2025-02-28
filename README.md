@@ -143,14 +143,3 @@ Commit your changes.
 Open a pull request.
 License
 This project is licensed under the MIT License.
-
-yaml
-Copy code
-
----
-
-### Instructions:
-
-1. **Create a file named `README.md`** at the root of your repository.
-2. **Copy and paste** the above text into the file.
-3. **Commit and push** the file to your repository.
