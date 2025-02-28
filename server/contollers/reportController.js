@@ -376,6 +376,16 @@ export const reportController =
                 totalExams: 1,
                 examHistory: 1
               }
+            },
+
+            // --- New Lookup for Proctoring Sessions ---
+            {
+              $lookup: {
+                from: "proctoringsessions", // the collection name in MongoDB (usually lowercase and plural)
+                localField: "_id", // the student id from our grouping
+                foreignField: "student", // field in ProctoringSession referencing the student
+                as: "proctorSessions"
+              }
             }
           ]);
       
