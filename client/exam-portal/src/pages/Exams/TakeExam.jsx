@@ -1,28 +1,36 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import Spinner from '../../components/common/Spinner';
-import { useNavigate } from 'react-router-dom';
 
 function TakeExam() {
   const { examId } = useParams();
+  const navigate = useNavigate();
+
   const [examData, setExamData] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [attemptId, setAttemptId] = useState(null);
+  const [proctorSessionId, setProctorSessionId] = useState(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showWarning, setShowWarning] = useState(false);
 
+  // Start exam and proctoring session
   useEffect(() => {
-    const startExam = async () => {
+    const startExamAndProctor = async () => {
       try {
-        const { data } = await api.get(`/exams/${examId}/start`);
-        // console.log('Fetched exam data:', data);
-        // Set examData from data.exam, questions from data.questions, and attemptId from data.attemptId
+        // Start exam: assume backend returns exam data, questions, attemptId, etc.
+        const examResponse = await api.get(`/exams/${examId}/start`);
+        const data = examResponse.data;
         setExamData(data.exam);
         setQuestions(data.questions);
         setAttemptId(data.attemptId);
+
+        // Start proctoring session
+        const proctorResponse = await api.post('/proctoring/start', { examId });
+        setProctorSessionId(proctorResponse.data.session._id);
       } catch (err) {
         setError(err.response?.data?.error || 'Failed to start exam');
       } finally {
@@ -30,21 +38,60 @@ function TakeExam() {
       }
     };
 
-    startExam();
+    startExamAndProctor();
   }, [examId]);
+
+  // Setup event listener to detect tab switching/visibility change
+  useEffect(() => {
+    if (!proctorSessionId) return;
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        setShowWarning(true);
+        // Log the violation event to your backend
+        logEvent('browserSwitch', 'User switched browser tab');
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [proctorSessionId]);
+
+  // Optional: Also detect window blur (user clicks away from the window)
+  useEffect(() => {
+    if (!proctorSessionId) return;
+
+    const handleBlur = () => {
+      setShowWarning(true);
+      logEvent('windowBlur', 'Browser window lost focus');
+    };
+
+    window.addEventListener('blur', handleBlur);
+    return () => {
+      window.removeEventListener('blur', handleBlur);
+    };
+  }, [proctorSessionId]);
+
+  const logEvent = async (eventType, details) => {
+    try {
+      await api.post(`/proctoring/${proctorSessionId}/event`, { eventType, details });
+      console.log(`Logged event: ${eventType}`);
+    } catch (err) {
+      console.error('Error logging proctoring event:', err.response?.data);
+    }
+  };
 
   const handleAnswerChange = (questionId, answer) => {
     setAnswers({ ...answers, [questionId]: answer });
   };
-
-  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     try {
       await api.post(`/exams/${examId}/submit`, { attemptId, answers });
       window.alert("Submitted Successfully");
       navigate(`/exams/${examId}/results?attemptId=${attemptId}`);
-      // Handle navigation or display results here.
     } catch (err) {
       console.error('Submission error:', err.response?.data);
       setError(err.response?.data?.error || 'Submission failed');
@@ -54,9 +101,7 @@ function TakeExam() {
   if (loading) return <Spinner />;
   if (error) return <p className="text-red-500">{error}</p>;
 
-  // Ensure questions defaults to an empty array if undefined.
   const safeQuestions = questions || [];
-
   if (safeQuestions.length === 0) {
     return (
       <div className="container mx-auto p-4">
@@ -120,6 +165,24 @@ function TakeExam() {
           </button>
         )}
       </div>
+
+      {/* Warning Modal for Proctoring */}
+      {showWarning && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded shadow-md max-w-sm w-full">
+            <h2 className="text-red-600 font-bold text-xl mb-2">Warning!</h2>
+            <p className="mb-4 text-black font-bold">
+              You have switched tabs or lost focus on the exam window. Please return immediately. Multiple violations may result in exam termination.
+            </p>
+            <button
+              onClick={() => setShowWarning(false)}
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

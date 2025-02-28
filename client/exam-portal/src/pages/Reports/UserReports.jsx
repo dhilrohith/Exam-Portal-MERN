@@ -10,8 +10,7 @@ function UserReports() {
   useEffect(() => {
     const fetchUserReports = async () => {
       try {
-        const { data } = await api.get("/reports/users"); // Admin endpoint for all user reports
-        console.log("Fetched analytics:", data.analytics);
+        const { data } = await api.get("/reports/users");
         setAnalytics(data.analytics);
       } catch (err) {
         setError(err.response?.data?.error || "Failed to load user reports");
@@ -44,6 +43,44 @@ function UserReports() {
                 : "N/A"}
             </p>
             <p>Total Exams: {report.totalExams || 0}</p>
+
+            {/* Display Proctoring Sessions */}
+            <div className="mt-4">
+              <h3 className="font-bold">Proctoring Sessions:</h3>
+              {report.proctorSessions && report.proctorSessions.length > 0 ? (
+                report.proctorSessions.map((session) => (
+                  <div key={session._id} className="border p-2 my-2">
+                    <p>
+                      <strong>Session Start:</strong>{" "}
+                      {new Date(session.sessionStart).toLocaleString()}
+                    </p>
+                    <p>
+                      <strong>Status:</strong> {session.sessionStatus}
+                    </p>
+                    {session.events && session.events.length > 0 ? (
+                      <div className="mt-2">
+                        <h4 className="font-bold">Events:</h4>
+                        <ul className="list-disc ml-6">
+                          {session.events.map((event, idx) => (
+                            <li key={idx}>
+                              {event.eventType} at{" "}
+                              {new Date(event.timestamp).toLocaleTimeString()} -{" "}
+                              {event.details}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ) : (
+                      <p>No events recorded.</p>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <p>No proctoring sessions found.</p>
+              )}
+            </div>
+
+            {/* Existing Exam History */}
             <h3 className="font-bold mt-2">Exam History:</h3>
             <ul>
               {report.examHistory.map((exam, idx) => (
