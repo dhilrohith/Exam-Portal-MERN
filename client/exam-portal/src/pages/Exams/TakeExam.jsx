@@ -22,6 +22,10 @@ function TakeExam() {
   // --- NEW: Timer State ---
   const [timeRemaining, setTimeRemaining] = useState(null);
 
+  // for exam expired
+  const [examExpired, setExamExpired] = useState(false);
+
+
   // Start exam and proctoring session
   useEffect(() => {
     const startExamAndProctor = async () => {
@@ -56,9 +60,9 @@ function TakeExam() {
     const nowMs = Date.now();
 
     const initialRemaining = endTimeMs - nowMs;
-    // If the exam is already past its end time, auto-submit
+    // If the exam is already past its end time, mark it expired
     if (initialRemaining <= 0) {
-      handleSubmit();
+      setExamExpired(true);
     } else {
       setTimeRemaining(initialRemaining);
     }
@@ -142,6 +146,35 @@ function TakeExam() {
 
   if (loading) return <Spinner />;
   if (error) return <p className="text-red-500">{error}</p>;
+
+  if(examExpired){
+    return(
+      <div
+      className="container mx-auto p-4"
+      >
+        <h1
+        className="text-xl font-bold mb-4"
+        >
+          {examData?.title}
+        </h1>
+
+        <p
+        className="text-red-600 font-bold"
+        >
+          This exam has expired. You can no longer take this exam.
+        </p>
+
+        <button
+        onClick={() => navigate('/exams')}
+        className="mt-4 !bg-gray-500
+        text-white px-4 py-2 rounded-md
+        "
+        >
+          Go Back
+        </button>
+      </div>
+    )
+  }
 
   const safeQuestions = questions || [];
   if (safeQuestions.length === 0) {
