@@ -44,7 +44,7 @@ function ExamDetail() {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 flex flex-col flex-1">
       {exam && (
         <>
           <h1 className="text-3xl font-bold mb-4">{exam.title}</h1>
