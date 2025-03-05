@@ -74,7 +74,7 @@ function Register() {
           <label htmlFor="role" className="block mb-2">Role</label>
           <select
             id="role"
-            className="border w-full p-2 text-black"
+            className="border w-full p-2 text-white"
             value={role}
             onChange={(e) => setRole(e.target.value)}
           >
@@ -82,7 +82,7 @@ function Register() {
             <option value="admin">Admin</option>
           </select>
         </div>
-        <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">
+        <button type="submit" className="!bg-green-500 text-white px-4 py-2 rounded">
           Register
         </button>
       </form>
