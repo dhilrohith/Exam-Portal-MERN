@@ -65,8 +65,8 @@ function TakeExam() {
   useEffect(() => {
     if (timeRemaining === null) return; // not yet computed
     if (timeRemaining <= 0) {
-      // If time is up, auto-submit
-      handleSubmit();
+      // If the exam is already past its end time, mark it expired
+      setExamExpired(true);
       return;
     }
 
