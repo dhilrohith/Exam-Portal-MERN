@@ -53,14 +53,14 @@ function ExamDetail() {
           <p><strong>Duration:</strong> {exam.schedule.durationMinutes} minutes</p>
           <div className="mt-4 flex space-x-4">
             <Link to={`/exams/${exam._id}/take`} 
-            className="bg-green-500 !text-white px-4 py-2 rounded">
+            className="!bg-green-500 !text-white px-4 py-2 rounded">
             Take Exam
             </Link>
 
             {user && user.role === 'admin' && (
               <>
                 <Link to={`/exams/${exam._id}/edit`} 
-                className="bg-blue-500 !text-white px-4 py-2 rounded">
+                className="!bg-blue-500 !text-white px-4 py-2 rounded">
                   Update Exam
                 </Link>
                 <button

@@ -195,21 +195,21 @@ function TakeExam() {
         <button
           disabled={currentQuestionIndex === 0}
           onClick={() => setCurrentQuestionIndex(currentQuestionIndex - 1)}
-          className="bg-gray-500 text-white px-4 py-2 rounded disabled:opacity-50"
+          className="!bg-gray-500 text-white px-4 py-2 rounded disabled:opacity-50"
         >
           Previous
         </button>
         {currentQuestionIndex < safeQuestions.length - 1 ? (
           <button
             onClick={() => setCurrentQuestionIndex(currentQuestionIndex + 1)}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+            className="!bg-blue-500 text-white px-4 py-2 rounded"
           >
             Next
           </button>
         ) : (
           <button
             onClick={handleSubmit}
-            className="bg-green-500 text-white px-4 py-2 rounded"
+            className="!bg-green-500 text-white px-4 py-2 rounded"
           >
             Submit Exam
           </button>
@@ -218,8 +218,8 @@ function TakeExam() {
 
       {/* Warning Modal for Proctoring */}
       {showWarning && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded shadow-md max-w-sm w-full">
+        <div className="fixed inset-0 flex items-center justify-center !bg-black bg-opacity-50 z-50">
+          <div className="!bg-white p-6 rounded shadow-md max-w-sm w-full">
             <h2 className="text-red-600 font-bold text-xl mb-2">Warning!</h2>
             <p className="mb-4 text-black font-bold">
               You have switched tabs or lost focus on the exam window. Please return immediately. 
@@ -227,7 +227,7 @@ function TakeExam() {
             </p>
             <button
               onClick={() => setShowWarning(false)}
-              className="bg-blue-500 text-white px-4 py-2 rounded"
+              className="!bg-blue-500 text-white px-4 py-2 rounded"
             >
               OK
             </button>
