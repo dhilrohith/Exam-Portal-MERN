@@ -49,7 +49,13 @@ function ExamDetail() {
         <>
           <h1 className="text-3xl font-bold mb-4">{exam.title}</h1>
           <p className="mb-4">{exam.description}</p>
-          <p><strong>Scheduled:</strong> {new Date(exam.schedule.startDateTime).toLocaleString()}</p>
+          <p><strong>Scheduled:</strong> {new Date(exam.schedule.startDateTime).toLocaleString(
+            'en-Gb', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric'
+            }
+          )}</p>
           <p><strong>Duration:</strong> {exam.schedule.durationMinutes} minutes</p>
           <div className="mt-4 flex space-x-4">
             <Link to={`/exams/${exam._id}/take`} 
