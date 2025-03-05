@@ -7,7 +7,7 @@ function Dashboard() {
 
   return (
     <div className="container mx-auto p-8">
-      <h1 className="text-3xl font-bold mb-4">Dashboard</h1>
+      <h1 className="text-3xl font-bold mb-4 text-center">Dashboard</h1>
       <p>Welcome to your dashboard. You can view your exams and reports as applicable.</p>
       <div className="mt-6 flex flex-wrap gap-4">
         {/* Always visible for students */}
