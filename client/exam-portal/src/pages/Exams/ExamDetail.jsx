@@ -82,14 +82,14 @@ function ExamDetail() {
             {!isExamExpired ? (
               <Link
                 to={`/exams/${exam._id}/take`}
-                className="!bg-green-500 text-white px-4 py-2 rounded"
+                className="!bg-green-500 !text-white px-4 py-2 rounded"
               >
                 Take Exam
               </Link>
             ) : (
               <Link
                 to="/exams"
-                className="!bg-gray-500 text-white px-4 py-2 rounded"
+                className="!bg-gray-500 !text-white px-4 py-2 rounded"
               >
                 Exam Expired - View Exams
               </Link>
@@ -100,13 +100,13 @@ function ExamDetail() {
               <>
                 <Link
                   to={`/exams/${exam._id}/edit`}
-                  className="!bg-blue-500 text-white px-4 py-2 rounded"
+                  className="!bg-blue-500 !text-white px-4 py-2 rounded"
                 >
                   Update Exam
                 </Link>
                 <button
                   onClick={handleDelete}
-                  className="!bg-red-500 text-white px-4 py-2 rounded"
+                  className="!bg-red-500 !text-white px-4 py-2 rounded"
                 >
                   Delete Exam
                 </button>
