@@ -54,19 +54,11 @@ function TakeExam() {
   useEffect(() => {
     if (!examData || !examData.schedule) return;
 
-    const startTimeMs = new Date(examData.schedule.startDateTime).getTime();
     const durationMs = examData.schedule.durationMinutes * 60 * 1000;
-    const endTimeMs = startTimeMs + durationMs;
     const nowMs = Date.now();
+    const endTimeMs = nowMs + durationMs;
 
-    const initialRemaining = endTimeMs - nowMs;
-    // If the exam is already past its end time, mark it expired
-    if (initialRemaining <= 0) {
-      setExamExpired(true);
-    } else {
-      setTimeRemaining(initialRemaining);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setTimeRemaining(endTimeMs - nowMs);
   }, [examData]);
 
   // Timer: Decrement timeRemaining every second; auto-submit at 0
