@@ -4,6 +4,8 @@ import QuestionBank from '../models/questionBank.js';
 
 import ExamAttempt from '../models/examAttempt.js';
 
+import {compareAnswers} from '../utils/compareAnswers.js';
+
 export const examManagementController = {
     startExam: async (req, res, next)=>{
         try{
@@ -170,11 +172,8 @@ export const examManagementController = {
               // Retrieve the student's answer from the Map using the question's _id
               const studentAnswer = attempt.answers
               .get(question._id.toString());
-              // Determine if the answer is correct; if no answer provided, default to false.
-              const isCorrect = studentAnswer 
-                ? studentAnswer.toString() === 
-                question.correctAnswer.toString() 
-                : false;
+              
+              const isCorrect = compareAnswers(studentAnswer, question.correctAnswer);
         
               // Increment score if correct
               if (isCorrect) {
