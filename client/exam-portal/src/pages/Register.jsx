@@ -74,7 +74,7 @@ function Register() {
           <label htmlFor="role" className="block mb-2">Role</label>
           <select
             id="role"
-            className="border w-full p-2 text-white !bg-black"
+            className="border w-full p-2 text-white "
             value={role}
             onChange={(e) => setRole(e.target.value)}
           >
