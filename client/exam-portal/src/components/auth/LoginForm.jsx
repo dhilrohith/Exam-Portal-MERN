@@ -31,7 +31,8 @@ const LoginForm = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-amber-700 shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-md mx-auto">
+    <form onSubmit={handleSubmit} className="bg-amber-700 shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-md mx-auto
+    ">
       <h2 className="text-xl font-bold mb-4">Login</h2>
       {error && <p className="text-red-700 font-bold mb-4">{error}</p>}
       <label className="block mb-2" htmlFor="email">Email</label>

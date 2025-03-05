@@ -3,7 +3,7 @@ import LoginForm from '../components/auth/LoginForm';
 
 function Login() {
   return (
-    <div className="flex justify-center items-center  ">
+    <div className="flex flex-1 justify-center items-center  ">
       <LoginForm />
     </div>
   );
