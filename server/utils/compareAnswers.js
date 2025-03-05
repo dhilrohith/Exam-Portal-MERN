@@ -1,19 +1,20 @@
 // helpers/gradeUtils.js
 export function compareAnswers(studentAnswer, correctAnswer) {
-    // Normalize string values
-    const normalizeString = (str) =>
-      String(str).trim().toLowerCase();
-  
-    // Try converting both answers to numbers
-    const numStudent = Number(studentAnswer);
-    const numCorrect = Number(correctAnswer);
-  
-    // If both conversions are valid, compare as numbers
-    if (!isNaN(numStudent) && !isNaN(numCorrect)) {
-      return numStudent === numCorrect;
-    } else {
-      // Otherwise, compare as strings (case-insensitive)
-      return normalizeString(studentAnswer) === normalizeString(correctAnswer);
-    }
+  // If both values are booleans, compare directly
+  if (typeof studentAnswer === 'boolean' && typeof correctAnswer === 'boolean') {
+    return studentAnswer === correctAnswer;
   }
   
+  // Normalize values: convert to strings, trim, and convert to lowercase
+  const normalize = (val) => String(val).trim().toLowerCase();
+
+  // Attempt numeric conversion
+  const numStudent = Number(studentAnswer);
+  const numCorrect = Number(correctAnswer);
+
+  if (!isNaN(numStudent) && !isNaN(numCorrect)) {
+    return numStudent === numCorrect;
+  } else {
+    return normalize(studentAnswer) === normalize(correctAnswer);
+  }
+}
