@@ -6,14 +6,13 @@ import useAuth from '../../hooks/useAuth';
 
 function ExamDetail() {
   const { examId } = useParams();
-  const navigate = useNavigate();
-  const { user } = useAuth(); // Get the current user's info
-
   const [exam, setExam] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const { user } = useAuth(); // Get the current user's info
+  const navigate = useNavigate();
 
-  // We'll store a boolean to indicate if the exam has expired
+  // State to track exam expiration
   const [isExamExpired, setIsExamExpired] = useState(false);
 
   useEffect(() => {
@@ -23,13 +22,11 @@ function ExamDetail() {
         const fetchedExam = data.exam;
         setExam(fetchedExam);
 
-        // Check if exam is expired
+        // Check if exam is expired: calculate end time based on scheduled start and duration
         const startTimeMs = new Date(fetchedExam.schedule.startDateTime).getTime();
         const durationMs = fetchedExam.schedule.durationMinutes * 60 * 1000;
         const endTimeMs = startTimeMs + durationMs;
         const nowMs = Date.now();
-
-        // If current time is past endTime, the exam is expired
         setIsExamExpired(nowMs > endTimeMs);
       } catch (err) {
         setError(err.response?.data?.error || 'Failed to load exam details');
@@ -42,14 +39,14 @@ function ExamDetail() {
   }, [examId]);
 
   const handleDelete = async () => {
-    if (window.confirm('Are you sure you want to delete this exam?')) {
+    if (window.confirm("Are you sure you want to delete this exam?")) {
       try {
         await api.delete(`/exams/${examId}`);
-        window.alert('Exam deleted successfully');
+        window.alert("Exam deleted successfully");
         navigate('/dashboard');
       } catch (err) {
-        console.error('Error deleting exam', err.response?.data);
-        window.alert('Failed to delete exam');
+        console.error("Error deleting exam", err.response?.data);
+        window.alert("Failed to delete exam");
       }
     }
   };
@@ -64,7 +61,7 @@ function ExamDetail() {
           <h1 className="text-3xl font-bold mb-4">{exam.title}</h1>
           <p className="mb-4">{exam.description}</p>
 
-          {/* Display date and time in DD/MM/YYYY HH:MM format */}
+          {/* Display scheduled date and time including seconds */}
           <p>
             <strong>Scheduled:</strong>{' '}
             {new Date(exam.schedule.startDateTime).toLocaleString('en-GB', {
@@ -73,26 +70,29 @@ function ExamDetail() {
               year: 'numeric',
               hour: '2-digit',
               minute: '2-digit',
+              second: '2-digit',
             })}
           </p>
-
           <p>
             <strong>Duration:</strong> {exam.schedule.durationMinutes} minutes
           </p>
 
-          <div className="mt-4 flex space-x-4">
-            {/* Show "Take Exam" only if exam isn't expired */}
+          <div className="mt-4 flex space-x-4 items-center">
+            {/* Conditionally render "Take Exam" or "Exam Expired" */}
             {!isExamExpired ? (
               <Link
                 to={`/exams/${exam._id}/take`}
-                className="bg-green-500 text-white px-4 py-2 rounded"
+                className="!bg-green-500 text-white px-4 py-2 rounded"
               >
                 Take Exam
               </Link>
             ) : (
-              <p className="text-red-500 font-bold">
-                This exam has expired.
-              </p>
+              <Link
+                to="/exams"
+                className="!bg-gray-500 text-white px-4 py-2 rounded"
+              >
+                Exam Expired - View Exams
+              </Link>
             )}
 
             {/* Admin controls */}
@@ -100,13 +100,13 @@ function ExamDetail() {
               <>
                 <Link
                   to={`/exams/${exam._id}/edit`}
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                  className="!bg-blue-500 text-white px-4 py-2 rounded"
                 >
                   Update Exam
                 </Link>
                 <button
                   onClick={handleDelete}
-                  className="bg-red-500 text-white px-4 py-2 rounded"
+                  className="!bg-red-500 text-white px-4 py-2 rounded"
                 >
                   Delete Exam
                 </button>
