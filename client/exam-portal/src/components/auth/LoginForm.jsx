@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import api from '../../services/api';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
+import Spinner from '../common/Spinner';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -21,6 +22,8 @@ const LoginForm = () => {
       setError(err.response?.data?.error || 'Login failed');
     }
   };
+
+  if (loading) return <Spinner />;
 
   return (
     <form onSubmit={handleSubmit} className="bg-amber-700 shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-md mx-auto">
