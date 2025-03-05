@@ -78,8 +78,12 @@ function Register() {
             value={role}
             onChange={(e) => setRole(e.target.value)}
           >
-            <option value="student" >Student</option>
-            <option value="admin">Admin</option>
+            <option value="student" 
+            className='bg-amber-700'
+            >Student</option>
+            <option value="admin"
+            className='bg-amber-700'
+            >Admin</option>
           </select>
         </div>
         <button type="submit" className="!bg-green-500 text-white px-4 py-2 rounded">
