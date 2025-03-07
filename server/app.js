@@ -28,7 +28,12 @@ const app = express();
 app.use(cors({
     origin: 'https://exam-portal-mern-web.netlify.app', // adjust this to your frontend's URL
     credentials: true,
+    optionsSuccessStatus: 200,
   }));
+
+app.use(cors(corsOptions));
+
+app.options('*', cors(corsOptions));
 
 app.use(express.json());
 
