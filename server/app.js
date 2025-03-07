@@ -24,12 +24,12 @@ import {dashboardRouter} from
 
 const app = express();
 
-// Use CORS middleware
-app.use(cors({
-    origin: 'https://exam-portal-mern-web.netlify.app', // adjust this to your frontend's URL
-    credentials: true,
-    optionsSuccessStatus: 200,
-  }));
+// Define CORS options before using them
+const corsOptions = {
+  origin: 'https://exam-portal-mern-web.netlify.app', // exactly match your client URL, no trailing slash
+  credentials: true,
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
 
 app.use(cors(corsOptions));
 
